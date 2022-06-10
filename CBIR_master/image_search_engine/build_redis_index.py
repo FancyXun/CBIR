@@ -4,7 +4,7 @@ from __future__ import print_function
 import argparse
 
 import h5py
-from image_search_pipeline.db import RedisQueue
+from image_search_pipeline.database.redisqueue import RedisQueue
 from redis import Redis
 
 # construct the argument parser and parse the argument

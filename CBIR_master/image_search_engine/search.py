@@ -3,6 +3,7 @@ from __future__ import print_function
 
 import argparse
 import json
+import os.path
 import pickle
 
 import cv2
@@ -24,7 +25,7 @@ ap.add_argument("-f", "--features_db", required=True, help="Path to the feature 
 ap.add_argument("-b", "--bovw_db", required=True, help="Path to the bag-of-visual-words database")
 ap.add_argument("-c", "--codebook", required=True, help="Path to the codebook")
 ap.add_argument("-i", "--idf", type=str, help="Path to inverted document frequencies array")
-ap.add_argument("-r", "--relevant", required=True, help="Path to the relevant dictionary")
+# ap.add_argument("-r", "--relevant", required=True, help="Path to the relevant dictionary")
 ap.add_argument("-q", "--query", required=True, help="Path to the query image")
 args = vars(ap.parse_args())
 
@@ -48,9 +49,9 @@ bovw = BagOfVisualWords(vocab)
 
 # load the relevant queries dictionary and lookup the relevant results for the
 # query image
-relevant = json.loads(open(args["relevant"]).read())
+# relevant = json.loads(open(args["relevant"]).read())
 queryFilename = args["query"][args["query"].rfind("/") + 1:]
-queryRelevant = relevant[queryFilename]
+# queryRelevant = relevant[queryFilename]
 
 # load the query image and process it
 queryImage = cv2.imread(args["query"])
@@ -77,9 +78,10 @@ for (i, (score, resultID, resultsIdx)) in enumerate(sr.results):
     # load the result image and display it
     print("[RESULT] {result_num}. {result} - {score:.2f}".format(result_num=i + 1,
                                                                  result=resultID, score=score))
-    result = cv2.imread("{}/{}".format(args["dataset"], resultID))
-    montage.addResult(result, text="#{}".format(i + 1),
-                      highlight=resultID in queryRelevant)
+    result = cv2.imread(os.path.join(args["dataset"], resultID.decode('utf8')))
+    # montage.addResult(result, text="#{}".format(i + 1),
+    #                   highlight=resultID in queryRelevant)
+    montage.addResult(result, text="#{}".format(i + 1))
 
 # show the output image of results
 cv2.imshow("Results", imutils.resize(montage.montage, height=700))

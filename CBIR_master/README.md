@@ -253,6 +253,8 @@ and build the inverted index inside `redis`.
 Using following command while making sure that redis server is on will build a corresponding inverted index.
 
 ```
+# mac 安装 redis : brew install redis
+# mac 启动 redis: redis-server
 python build_redis_index.py --bovw_db output/bovw.hdf5
 ```
 
